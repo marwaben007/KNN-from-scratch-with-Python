@@ -1,0 +1,59 @@
+#Marwa_benahnia
+import numpy as np
+import matplotlib.pyplot as plt
+import random as rd
+from math import sqrt
+
+def distance (a, b):
+    return sqrt((a[0]-b[0])**2 + (a[1]-b[1])**2 )
+
+def affiche(x, a, n , k_voisins ):
+# Création des deux tableaux (axe x et y) pour affichage des points de a (tableaux numpy)
+    xlargeur=np.array([a[i][0] for i in range(n)])
+    yhauteur=np.array([a[i][1] for i in range(n)])
+
+# Création des deux tableaux (axe x et y) pour affichage des points de k_voisins (tableaux numpy)
+    xlargeurk=np.array([k_voisins[i][0] for i in range(k)])
+    yhauteurk=np.array([k_voisins[i][1] for i in range(k)])
+        
+# Initialisation des propriétés de l'affichage
+    plt.xlabel('x')
+    plt.ylabel('y')
+    plt.title('the first nearest points to x')
+    
+# Affichage
+    plt.scatter(xlargeur,yhauteur, c='grey' ,label='far from x')
+    plt.scatter(xlargeurk,yhauteurk, c='blue',label='near to x')
+    plt.scatter(x[0],x[1], marker='x',c='blue')
+    plt.show()
+
+def cherche_k_voisins(k, x, a, n):
+    k_voisins=[a[i] for i in range(k)] 
+    for i in range(k,n):
+        for j in range(k):
+            if distance(a[i],x)<distance(k_voisins[j],x):
+                largest_distance=0
+                for j in range(k):
+                    if largest_distance<distance(k_voisins[j],x):
+                        largest_distance=distance(k_voisins[j],x)
+                        indice=j
+                del k_voisins[indice]
+                k_voisins.append(a[i])
+                break
+                
+    return k_voisins
+
+# Programme principal
+# Création des données
+n = 200
+k = 10
+a = [(rd.random(), rd.random()) for i in range(n)]
+x = (rd.random(), rd.random())
+
+
+
+#recherche des k plus proches voisins de x dans a
+k_voisins=cherche_k_voisins(k, x, a, n)   
+
+#affichage des k plus proches voisins    
+affiche(x, a, n ,k_voisins)
